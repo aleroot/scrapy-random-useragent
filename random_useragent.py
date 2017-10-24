@@ -7,18 +7,20 @@ user-agents and sets a random one for each request.
 """
 
 import random
+import logging
 from scrapy import signals
 from scrapy.downloadermiddlewares.useragent import UserAgentMiddleware
 
 __author__ = "Srinivasan Rangarajan"
 __copyright__ = "Copyright 2016, Srinivasan Rangarajan"
-__credits__ = ["Srinivasan Rangarajan"]
+__credits__ = ["Srinivasan Rangarajan","Alessio Pollero"]
 __license__ = "MIT"
-__version__ = "0.2"
+__version__ = "0.3"
 __maintainer__ = "Srinivasan Rangarajan"
 __email__ = "srinivasanr@gmail.com"
 __status__ = "Development"
 
+log = logging.getLogger('scrapy.useragents')
 
 class RandomUserAgentMiddleware(UserAgentMiddleware):
 
@@ -35,6 +37,8 @@ class RandomUserAgentMiddleware(UserAgentMiddleware):
         else:
             with open(user_agent_list_file, 'r') as f:
                 self.user_agent_list = [line.strip() for line in f.readlines()]
+            if(settings.get('USER_AGENT_MODE', user_agent) == 1):
+                self.user_agent_list = [random.choice(self.user_agent_list)]
 
     @classmethod
     def from_crawler(cls, crawler):
@@ -46,4 +50,5 @@ class RandomUserAgentMiddleware(UserAgentMiddleware):
     def process_request(self, request, spider):
         user_agent = random.choice(self.user_agent_list)
         if user_agent:
+            log.debug('Using user agent: ' + user_agent)
             request.headers.setdefault('User-Agent', user_agent)

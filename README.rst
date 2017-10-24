@@ -40,6 +40,10 @@ text file which has the list of all user-agents
 .. code-block:: python
 
     USER_AGENT_LIST = "/path/to/useragents.txt"
+    # User Agent mode
+    # 0 = Each request has different user agent(default)
+    # 1 = Take only one user agent from the list and assign it to every requests
+    USER_AGENT_MODE = 0
 
 Now all the requests from your crawler will have a random user-agent
 picked from the text file.
