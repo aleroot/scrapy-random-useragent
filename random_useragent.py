@@ -52,3 +52,6 @@ class RandomUserAgentMiddleware(UserAgentMiddleware):
         if user_agent:
             log.debug('Using user agent: ' + user_agent)
             request.headers.setdefault('User-Agent', user_agent)
+            if ('splash' in request.meta):
+                request.meta['splash']['args']['ua'] = user_agent
+                
